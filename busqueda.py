@@ -1,9 +1,9 @@
 import os
 import time
 
-RUTA_DATOS = "datos"
+DIRECTORIO_BASE = os.path.dirname(os.path.abspath(__file__))
+RUTA_DATOS = os.path.join(DIRECTORIO_BASE, "datos")
 ARCHIVO_INDICE = os.path.join(RUTA_DATOS, "index.txt")
-
 
 
 def busqueda_secuencial(carne):

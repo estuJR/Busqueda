@@ -1,4 +1,4 @@
-from busqueda import *
+from busqueda import busqueda_secuencial, busqueda_indexada, crear_indice, ARCHIVO_INDICE
 from estadisticas import comparar_busquedas
 import os
 
@@ -27,10 +27,10 @@ def main():
             print("=" * 100)
             try:
                 crear_indice()
-                print("\n✓ Índice creado exitosamente.")
-                print(f"✓ Ubicación: {ARCHIVO_INDICE}")
+                print("\nÍndice creado exitosamente.")
+                print(f"Ubicación: {ARCHIVO_INDICE}")
             except Exception as e:
-                print(f"\n✗ Error al crear el índice: {e}")
+                print(f"\nError al crear el índice: {e}")
             
         elif opcion == "2":
             print("\n" + "=" * 100)
@@ -39,7 +39,7 @@ def main():
             carne = input("\nIngrese el carné a buscar: ").strip()
             
             if not carne:
-                print("✗ Error: Debe ingresar un carné válido.")
+                print("Error: Debe ingresar un carné válido.")
                 continue
             
             try:
@@ -48,10 +48,10 @@ def main():
                 
                 print("\n" + "-" * 100)
                 if resultado['registro']:
-                    print(f"✓ REGISTRO ENCONTRADO:")
+                    print(f"REGISTRO ENCONTRADO:")
                     print(f"  {resultado['registro']}")
                 else:
-                    print(f"✗ No se encontró el carné '{carne}'")
+                    print(f"No se encontró el carné '{carne}'")
                 
                 print(f"\nESTADÍSTICAS DE BÚSQUEDA:")
                 print(f"  • Archivos abiertos: {resultado['archivos_abiertos']}")
@@ -59,7 +59,7 @@ def main():
                 print(f"  • Tiempo transcurrido: {resultado['tiempo_ms']:.4f} ms")
                 print("-" * 100)
             except Exception as e:
-                print(f"\n✗ Error durante la búsqueda: {e}")
+                print(f"\nError durante la búsqueda: {e}")
             
         elif opcion == "3":
             print("\n" + "=" * 100)
@@ -74,7 +74,7 @@ def main():
             carne = input("\nIngrese el carné a buscar: ").strip()
             
             if not carne:
-                print("✗ Error: Debe ingresar un carné válido.")
+                print("Error: Debe ingresar un carné válido.")
                 continue
             
             try:
@@ -83,10 +83,10 @@ def main():
                 
                 print("\n" + "-" * 100)
                 if resultado['registro']:
-                    print(f"✓ REGISTRO ENCONTRADO:")
+                    print(f"REGISTRO ENCONTRADO:")
                     print(f"  {resultado['registro']}")
                 else:
-                    print(f"✗ No se encontró el carné '{carne}'")
+                    print(f"No se encontró el carné '{carne}'")
                 
                 print(f"\nESTADÍSTICAS DE BÚSQUEDA:")
                 print(f"  • Archivos abiertos: {resultado['archivos_abiertos']}")
@@ -106,17 +106,17 @@ def main():
                 num = int(num_input) if num_input else 10
                 
                 if num <= 0:
-                    print("✗ Error: El número de pruebas debe ser mayor a 0.")
+                    print("Error: El número de pruebas debe ser mayor a 0.")
                     continue
                 
                 print(f"\nEjecutando {num} pruebas comparativas...\n")
                 comparar_busquedas(num_pruebas=num)
                 
             except ValueError:
-                print("✗ Error: Número inválido. Usando 10 pruebas por defecto.")
+                print("Error: Número inválido. Usando 10 pruebas por defecto.")
                 comparar_busquedas(num_pruebas=10)
             except Exception as e:
-                print(f"\n✗ Error durante la comparación: {e}")
+                print(f"\nError durante la comparación: {e}")
                 
         elif opcion == "5":
             print("\n" + "=" * 100)
@@ -125,7 +125,7 @@ def main():
             break
             
         else:
-            print("\n✗ Opción inválida. Por favor, seleccione una opción del 1 al 5.")
+            print("\nOpción inválida. Por favor, seleccione una opción del 1 al 5.")
 
 if __name__ == "__main__":
     main()

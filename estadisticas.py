@@ -1,3 +1,34 @@
+import os
+import random
+
+from busqueda import (busqueda_secuencial, busqueda_indexada, crear_indice, ARCHIVO_INDICE)
+
+DIRECTORIO_BASE = os.path.dirname(os.path.abspath(__file__))
+RUTA_DATOS = os.path.join(DIRECTORIO_BASE, "datos")
+ARCHIVO_INDICE = os.path.join(RUTA_DATOS, "index.txt")
+
+def obtener_carnes_aleatorios(num_carnes=10):
+    """Obtiene carnés aleatorios del conjunto de datos existente"""
+    carnes = []
+    archivos = sorted(
+        f for f in os.listdir(RUTA_DATOS)
+        if f.startswith("estudiantes_")
+    )
+    
+    todos_carnes = []
+    for nombre_archivo in archivos:
+        ruta = os.path.join(RUTA_DATOS, nombre_archivo)
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            for linea in archivo:
+                carne = linea.split("|")[0]
+                todos_carnes.append(carne)
+    
+    if len(todos_carnes) > 0:
+        num_seleccionar = min(num_carnes, len(todos_carnes))
+        carnes = random.sample(todos_carnes, num_seleccionar)
+    
+    return carnes
+
 def comparar_busquedas(num_pruebas=10):
     """
     Ejecuta ambos tipos de búsqueda con carnés aleatorios y genera una tabla comparativa.

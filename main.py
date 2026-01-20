@@ -1,5 +1,6 @@
 from busqueda import *
 from estadisticas import comparar_busquedas
+import os
 
 def main():
     """Función principal del programa"""

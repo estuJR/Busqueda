@@ -1,5 +1,10 @@
 # Archivos Secuenciales vs Archivos Indexados
 
+## Grupo 3:
+* Javier Alvizures
+* Anthony
+* Enya Gálvez
+
 ## Objetivo
 
 Implementar y comparar dos métodos de búsqueda en archivos:

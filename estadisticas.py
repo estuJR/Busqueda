@@ -1,112 +1,3 @@
-import os
-import time
-import random
-
-RUTA_DATOS = "datos"
-ARCHIVO_INDICE = os.path.join(RUTA_DATOS, "index.txt")
-
-def busqueda_secuencial(carne):
-    inicio = time.perf_counter()
-    archivos = sorted(
-        f for f in os.listdir(RUTA_DATOS)
-        if f.startswith("estudiantes_")
-    )
-    archivos_abiertos = 0
-    lineas_leidas = 0
-    for nombre_archivo in archivos:
-        archivos_abiertos += 1
-        ruta = os.path.join(RUTA_DATOS, nombre_archivo)
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            for linea in archivo:
-                lineas_leidas += 1
-                campos = linea.strip().split("|")
-                if campos[0] == carne:
-                    fin = time.perf_counter()
-                    return {
-                        "registro": linea.strip(),
-                        "archivos_abiertos": archivos_abiertos,
-                        "lineas_leidas": lineas_leidas,
-                        "tiempo_ms": (fin - inicio) * 1000
-                    }
-    fin = time.perf_counter()
-    return {
-        "registro": None,
-        "archivos_abiertos": archivos_abiertos,
-        "lineas_leidas": lineas_leidas,
-        "tiempo_ms": (fin - inicio) * 1000
-    }
-
-def crear_indice():
-    archivos = sorted(
-        f for f in os.listdir(RUTA_DATOS)
-        if f.startswith("estudiantes_")
-    )
-    with open(ARCHIVO_INDICE, "w", encoding="utf-8") as indice:
-        for nombre_archivo in archivos:
-            ruta = os.path.join(RUTA_DATOS, nombre_archivo)
-            with open(ruta, "r", encoding="utf-8") as archivo:
-                while True:
-                    posicion = archivo.tell()
-                    linea = archivo.readline()
-                    if not linea:
-                        break
-                    carne = linea.split("|")[0]
-                    indice.write(f"{carne}|{nombre_archivo}|{posicion}\n")
-
-def busqueda_indexada(carne):
-    inicio = time.perf_counter()
-    archivos_abiertos = 0
-    lineas_leidas = 0
-    with open(ARCHIVO_INDICE, "r", encoding="utf-8") as indice:
-        archivos_abiertos += 1
-        for linea in indice:
-            lineas_leidas += 1
-            c, archivo_datos, posicion = linea.strip().split("|")
-            if c == carne:
-                ruta = os.path.join(RUTA_DATOS, archivo_datos)
-                with open(ruta, "r", encoding="utf-8") as archivo:
-                    archivos_abiertos += 1
-                    archivo.seek(int(posicion))
-                    registro = archivo.readline().strip()
-                    fin = time.perf_counter()
-                    return {
-                        "registro": registro,
-                        "archivos_abiertos": archivos_abiertos,
-                        "lineas_leidas": lineas_leidas + 1,
-                        "tiempo_ms": (fin - inicio) * 1000
-                    }
-    fin = time.perf_counter()
-    return {
-        "registro": None,
-        "archivos_abiertos": archivos_abiertos,
-        "lineas_leidas": lineas_leidas,
-        "tiempo_ms": (fin - inicio) * 1000
-    }
-
-def obtener_carnes_aleatorios(num_carnes=10):
-    """Obtiene carnés aleatorios del conjunto de datos existente"""
-    carnes = []
-    archivos = sorted(
-        f for f in os.listdir(RUTA_DATOS)
-        if f.startswith("estudiantes_")
-    )
-    
-    # Recolectar todos los carnés disponibles
-    todos_carnes = []
-    for nombre_archivo in archivos:
-        ruta = os.path.join(RUTA_DATOS, nombre_archivo)
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            for linea in archivo:
-                carne = linea.split("|")[0]
-                todos_carnes.append(carne)
-    
-    # Seleccionar carnés aleatorios
-    if len(todos_carnes) > 0:
-        num_seleccionar = min(num_carnes, len(todos_carnes))
-        carnes = random.sample(todos_carnes, num_seleccionar)
-    
-    return carnes
-
 def comparar_busquedas(num_pruebas=10):
     """
     Ejecuta ambos tipos de búsqueda con carnés aleatorios y genera una tabla comparativa.
@@ -123,7 +14,6 @@ def comparar_busquedas(num_pruebas=10):
         crear_indice()
         print("Índice creado exitosamente.\n")
     
-    
     print(f"Obteniendo {num_pruebas} carnés aleatorios...")
     carnes = obtener_carnes_aleatorios(num_pruebas)
     print(f"Se seleccionaron {len(carnes)} carnés para las pruebas.\n")
@@ -133,10 +23,7 @@ def comparar_busquedas(num_pruebas=10):
     for i, carne in enumerate(carnes, 1):
         print(f"Ejecutando prueba {i}/{len(carnes)} - Carné: {carne}")
         
-        # Búsqueda secuencial
         res_sec = busqueda_secuencial(carne)
-        
-        # Búsqueda indexada
         res_idx = busqueda_indexada(carne)
         
         resultados.append({
@@ -155,17 +42,14 @@ def comparar_busquedas(num_pruebas=10):
     for res in resultados:
         carne = res["carne"]
         
-        # Búsqueda secuencial
         print(f"{carne:<15} {'Secuencial':<15} {res['sec']['archivos_abiertos']:<12} "
               f"{res['sec']['lineas_leidas']:<12} {res['sec']['tiempo_ms']:<15.4f}")
         
-        # Búsqueda indexada
         print(f"{'':<15} {'Indexada':<15} {res['idx']['archivos_abiertos']:<12} "
               f"{res['idx']['lineas_leidas']:<12} {res['idx']['tiempo_ms']:<15.4f}")
-    
+        
         print("-" * 100)
     
-    # Estadísticas generales
     print("\n" + "=" * 100)
     print("ESTADÍSTICAS PROMEDIO")
     print("=" * 100)

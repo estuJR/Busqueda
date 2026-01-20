@@ -66,7 +66,7 @@ def crear_indice():
 
 
 #funcion para la parte 3 
-ef busqueda_indexada(carne):
+def busqueda_indexada(carne):
     inicio = time.perf_counter()
 
     archivos_abiertos = 0
